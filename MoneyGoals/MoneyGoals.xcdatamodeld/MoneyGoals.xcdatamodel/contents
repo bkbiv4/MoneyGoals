@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Account" representedClassName="Account" syncable="YES" codeGenerationType="class">
+        <attribute name="accountBalance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="accountName" optional="YES" attributeType="String"/>
+        <attribute name="accountNumber" optional="YES" attributeType="String"/>
+        <relationship name="accountType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccountType" inverseName="account" inverseEntity="AccountType"/>
+        <relationship name="asset" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Asset" inverseName="account" inverseEntity="Asset"/>
+        <relationship name="broker" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Broker" inverseName="account" inverseEntity="Broker"/>
+        <relationship name="credit" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Credit" inverseName="account" inverseEntity="Credit"/>
+        <relationship name="investment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Investment" inverseName="account" inverseEntity="Investment"/>
+        <relationship name="loan" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Loan" inverseName="account" inverseEntity="Loan"/>
+        <relationship name="other" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Other" inverseName="account" inverseEntity="Other"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Transaction" inverseName="account" inverseEntity="Transaction"/>
+    </entity>
+    <entity name="AccountType" representedClassName="AccountType" syncable="YES" codeGenerationType="class">
+        <attribute name="mainType" optional="YES" attributeType="String"/>
+        <attribute name="subType" optional="YES" attributeType="String"/>
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="accountType" inverseEntity="Account"/>
+    </entity>
+    <entity name="Asset" representedClassName="Asset" syncable="YES" codeGenerationType="class">
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="asset" inverseEntity="Account"/>
+    </entity>
+    <entity name="Bill" representedClassName="Bill" syncable="YES" codeGenerationType="class">
+        <attribute name="billDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="billName" optional="YES" attributeType="String"/>
+        <attribute name="billValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Broker" representedClassName="Broker" syncable="YES" codeGenerationType="class">
+        <attribute name="brokerName" optional="YES" attributeType="String"/>
+        <relationship name="account" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Account" inverseName="broker" inverseEntity="Account"/>
+    </entity>
+    <entity name="Category" representedClassName="Category" syncable="YES" codeGenerationType="class">
+        <attribute name="mainCategory" optional="YES" attributeType="String"/>
+        <attribute name="subCategory" optional="YES" attributeType="String"/>
+        <relationship name="transaction" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Transaction" inverseName="category" inverseEntity="Transaction"/>
+    </entity>
+    <entity name="Credit" representedClassName="Credit" syncable="YES" codeGenerationType="class">
+        <attribute name="creditLimit" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="credit" inverseEntity="Account"/>
+    </entity>
+    <entity name="Inventory" representedClassName="Inventory" syncable="YES" codeGenerationType="class">
+        <attribute name="itemAmount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="itemCost" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="itemName" optional="YES" attributeType="String"/>
+        <attribute name="itemValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="purchaseDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Investment" representedClassName="Investment" syncable="YES" codeGenerationType="class">
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="investment" inverseEntity="Account"/>
+    </entity>
+    <entity name="Loan" representedClassName="Loan" syncable="YES" codeGenerationType="class">
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="loan" inverseEntity="Account"/>
+    </entity>
+    <entity name="Other" representedClassName="Other" syncable="YES" codeGenerationType="class">
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="other" inverseEntity="Account"/>
+    </entity>
+    <entity name="Transaction" representedClassName="Transaction" syncable="YES" codeGenerationType="class">
+        <attribute name="transactionDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="transactionDescription" optional="YES" attributeType="String"/>
+        <attribute name="transactionType" optional="YES" attributeType="String"/>
+        <attribute name="transactionValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="transactions" inverseEntity="Account"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="transaction" inverseEntity="Category"/>
+    </entity>
+    <elements>
+        <element name="Account" positionX="-718.79296875" positionY="45.24609375" width="128" height="208"/>
+        <element name="AccountType" positionX="-358.1640625" positionY="44.74609375" width="128" height="88"/>
+        <element name="Asset" positionX="-429.18359375" positionY="194.6640625" width="128" height="58"/>
+        <element name="Bill" positionX="-1110.97265625" positionY="-54.55078125" width="128" height="88"/>
+        <element name="Broker" positionX="-902.02734375" positionY="-38.8515625" width="128" height="73"/>
+        <element name="Category" positionX="-939.66796875" positionY="490.6953125" width="128" height="88"/>
+        <element name="Credit" positionX="-1030.39453125" positionY="89.0859375" width="128" height="73"/>
+        <element name="Inventory" positionX="-521.48828125" positionY="-78.87109375" width="128" height="118"/>
+        <element name="Investment" positionX="-994.0546875" positionY="241.44140625" width="128" height="58"/>
+        <element name="Loan" positionX="-961.50390625" positionY="376.76171875" width="128" height="58"/>
+        <element name="Other" positionX="-484.640625" positionY="309.7578125" width="128" height="58"/>
+        <element name="Transaction" positionX="-731.22265625" positionY="343.3515625" width="128" height="133"/>
+    </elements>
+</model>
