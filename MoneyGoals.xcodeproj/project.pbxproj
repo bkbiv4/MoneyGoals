@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -47,6 +47,7 @@
 		FD5DE9BE253B955500BF654C /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5DE9BD253B955500BF654C /* Protocols.swift */; };
 		FD5DE9C3253BBE2D00BF654C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5DE9C2253BBE2D00BF654C /* CoreDataManager.swift */; };
 		FD5DE9C7253CE53900BF654C /* InventoryItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5DE9C6253CE53900BF654C /* InventoryItemCell.swift */; };
+		FD969ADF2569907D005152DC /* BudgetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD969ADE2569907D005152DC /* BudgetVC.swift */; };
 		FDCBCE76253D13730093C035 /* AccountTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCBCE75253D13730093C035 /* AccountTable.swift */; };
 		FDCBCE7E2540F8AB0093C035 /* CreateAssetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCBCE7D2540F8AB0093C035 /* CreateAssetVC.swift */; };
 		FDCBCE832540F8EE0093C035 /* CreateCreditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCBCE822540F8EE0093C035 /* CreateCreditVC.swift */; };
@@ -98,6 +99,7 @@
 		FD5DE9BD253B955500BF654C /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		FD5DE9C2253BBE2D00BF654C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		FD5DE9C6253CE53900BF654C /* InventoryItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItemCell.swift; sourceTree = "<group>"; };
+		FD969ADE2569907D005152DC /* BudgetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetVC.swift; sourceTree = "<group>"; };
 		FDCBCE75253D13730093C035 /* AccountTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AccountTable.swift; path = MoneyGoals/Reusable_Elements/Tables/AccountTable.swift; sourceTree = SOURCE_ROOT; };
 		FDCBCE7D2540F8AB0093C035 /* CreateAssetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAssetVC.swift; sourceTree = "<group>"; };
 		FDCBCE822540F8EE0093C035 /* CreateCreditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCreditVC.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 		FD5DE9432535543600BF654C /* MoneyGoals */ = {
 			isa = PBXGroup;
 			children = (
+				FD969ADD25699067005152DC /* Budgets */,
 				FD5DE9BC253B952100BF654C /* Utilitiles */,
 				FD5DE99A253A917500BF654C /* Overview */,
 				FD5DE9A0253B58E400BF654C /* Accounts */,
@@ -285,6 +288,14 @@
 				FD5799222552381300134D01 /* Enums.swift */,
 			);
 			path = Utilitiles;
+			sourceTree = "<group>";
+		};
+		FD969ADD25699067005152DC /* Budgets */ = {
+			isa = PBXGroup;
+			children = (
+				FD969ADE2569907D005152DC /* BudgetVC.swift */,
+			);
+			path = Budgets;
 			sourceTree = "<group>";
 		};
 		FDCBCE78253E2FE90093C035 /* Tables */ = {
@@ -448,6 +459,7 @@
 				FD5DE9A9253B63DA00BF654C /* BillsVC.swift in Sources */,
 				FD5DE963253789E200BF654C /* UIColor_Extensions.swift in Sources */,
 				FD5DE9B1253B7F7F00BF654C /* CreateInventoryItemVC.swift in Sources */,
+				FD969ADF2569907D005152DC /* BudgetVC.swift in Sources */,
 				FDCBCE76253D13730093C035 /* AccountTable.swift in Sources */,
 				FD5DE990253910FF00BF654C /* Transaction_Struct.swift in Sources */,
 			);

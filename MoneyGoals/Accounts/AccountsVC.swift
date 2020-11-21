@@ -150,81 +150,6 @@ class AccountsVC: UIViewController {
         super.viewDidLayoutSubviews()
     }
     
-    func calculateNetworth() {
-        for account in accounts {
-            if account.accountType?.mainType == "Assets" || account.accountType?.mainType == "Investments" {
-                networth += account.accountBalance
-            }
-            else if account.accountType?.mainType == "Credit" || account.accountType?.mainType == "Loans" {
-                networth -= account.accountBalance
-            }
-            
-        }
-    }
-    
-    func createChartData() {
-        for account in accounts {
-            if account.accountType?.mainType == "Assets" || account.accountType?.mainType == "Investments" {
-                networth += account.accountBalance
-            }
-            else if account.accountType?.mainType == "Credit" || account.accountType?.mainType == "Loans" {
-                networth -= account.accountBalance
-            }
-
-        }
-        
-        let secondF = DateFormatter()
-        secondF.dateFormat = "MM/dd/yyyy"
-        
-        let today = "04/30/2020"
-        
-        
-        for x in 0...30 {
-            networthDates.append(secondF.string(from: Calendar.current.date(byAdding: .day, value: -x, to: secondF.date(from: today)!)!))
-        }
-        
-        for y in networthDates {
-            dayNetworth = 0.0
-            for x in transactions {
-                if secondF.string(from: x.transactionDate!) == y {
-                    if x.transactionType == "Income" {
-                        dayNetworth += x.transactionValue
-                    }
-                    else if x.transactionType == "Expense" {
-                        dayNetworth -= x.transactionValue
-                    }
-                }
-            }
-            
-            dayNetworthArray.append(dayNetworth.roundTo(places: 2))
-        }
-        
-        print(dayNetworthArray, "Day Array")
-        
-        addedNetworth = 0.0
-        todayNetworth = Double(dayNetworthArray.count)
-        print(todayNetworth, "Today Net")
-        
-        yValues.append(ChartDataEntry(x: 31, y: networth))
-        
-        for x in dayNetworthArray {
-            addedNetworth += x
-            todayNetworth -= 1.0
-            yValues.append(ChartDataEntry(x: todayNetworth, y: networth + addedNetworth))
-        }
-        yValues.reverse()
-        
-        let dataSet = LineChartDataSet(entries: yValues, label: "Networth")
-//        dataSet.drawCircleHoleEnabled = false
-        dataSet.drawCirclesEnabled = false
-        dataSet.mode = .linear
-        
-        let data = LineChartData(dataSet: dataSet)
-        data.setDrawValues(false)
-        chartView.data = data
-        
-    }
-    
     func setUI() {
         accountTable = AccountTable(accountTableView, allAccounts, self)
         
@@ -280,7 +205,76 @@ class AccountsVC: UIViewController {
 
 }
 
+// MARK: - Code is used to set up Networth chart on the Acoounts Page
+
 extension AccountsVC: ChartViewDelegate {
+    
+    
+    /// - Note: Fix the functions to create networth chart data
+    func createChartData() {
+        for account in accounts {
+            if account.accountType?.mainType == "Assets" || account.accountType?.mainType == "Investments" {
+                networth += account.accountBalance
+            }
+            else if account.accountType?.mainType == "Credit" || account.accountType?.mainType == "Loans" {
+                networth -= account.accountBalance
+            }
+
+        }
+        
+        let secondF = DateFormatter()
+        secondF.dateFormat = "MM/dd/yyyy"
+        
+        let today = Date()
+        
+        
+        for x in 0...30 {
+            networthDates.append(secondF.string(from: Calendar.current.date(byAdding: .day, value: -x, to: secondF.date(from: secondF.string(from: today))!)!))
+        }
+        
+        networthDates.reverse()
+        print(networthDates)
+        
+        for y in networthDates {
+            dayNetworth = 0.0
+            for x in transactions {
+                if secondF.string(from: x.transactionDate!) == y {
+                    if x.transactionType == "Income" {
+                        dayNetworth += x.transactionValue
+                    }
+                    else if x.transactionType == "Expense" {
+                        dayNetworth -= x.transactionValue
+                    }
+                }
+            }
+            
+            dayNetworthArray.append(dayNetworth.roundTo(places: 2))
+        }
+        
+        print(dayNetworthArray, "Day Array")
+        
+        addedNetworth = 0.0
+        todayNetworth = Double(dayNetworthArray.count)
+        print(todayNetworth, "Today Net")
+        
+        yValues.append(ChartDataEntry(x: 31, y: networth))
+        
+        for x in dayNetworthArray {
+            addedNetworth = x
+            todayNetworth -= 1.0
+            yValues.append(ChartDataEntry(x: todayNetworth, y: networth + addedNetworth))
+        }
+        yValues.reverse()
+        
+        let dataSet = LineChartDataSet(entries: yValues, label: "Networth")
+//        dataSet.drawCircleHoleEnabled = false
+        dataSet.drawCirclesEnabled = false
+        
+        let data = LineChartData(dataSet: dataSet)
+        data.setDrawValues(false)
+        chartView.data = data
+        
+    }
     
     func chartViewDidEndPanning(_ chartView: ChartViewBase) {
         chartView.reloadInputViews()
@@ -288,6 +282,7 @@ extension AccountsVC: ChartViewDelegate {
 
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         print(convertCurrencyToString(amount: entry.y))
+        print(entry)
         
         chartNetworthLabel.text = convertCurrencyToString(amount: entry.y)
     }

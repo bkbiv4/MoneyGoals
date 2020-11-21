@@ -215,8 +215,10 @@ extension AccountTransactionsVC: UIDocumentPickerDelegate {
         
 
         for columns in csvFile! {
+            print(columns)
             
             if columns.count == 4 {
+                print(columns)
 //                var tuple: (Transaction?, Error?)
                 if columns == ["Date", "Description", "Amount", "Running Bal."] {
                 }
@@ -230,26 +232,22 @@ extension AccountTransactionsVC: UIDocumentPickerDelegate {
                     
                     if transactionAmount < 0 {
                         transactionType = "Expense"
-                        amount = transactionAmount * -1
+//                        amount = transactionAmount * -1
                     }
                     else if transactionAmount > 0 {
                         transactionType = "Income"
-                        amount = transactionAmount
+//                        amount = transactionAmount
                     }
                     
                     let accountBalance = account?.accountBalance
+                    account?.accountBalance = accountBalance! + transactionAmount
                     
-                    if transactionType == "Income" {
-                        self.account?.accountBalance = accountBalance! + amount
-                    }
-                    else if transactionType == "Expense" {
-                        account?.accountBalance = accountBalance! - amount
-                    }
+                    print(account?.accountBalance)
                     
 //                    transaction = Transaction(transactionDate: dateFormatter.date(from: transactionDate)!, transactionDescription: transactionDescription, transactionAmount: transactionAmount)
 //                    print(transaction)
 
-                    let tuple = CoreDataManager.shared.createTransaction(account: self.account!, transactionDate: dateFormatter.date(from: transactionDate)!, transactionType: transactionType, transactionDescription: transactionDescription, transactionValue: amount, mainCategory: "Uncategorized", subCategory: "Uncategorized")
+                    let tuple = CoreDataManager.shared.createTransaction(account: self.account!, transactionDate: dateFormatter.date(from: transactionDate)!, transactionType: transactionType, transactionDescription: transactionDescription, transactionValue: transactionAmount, mainCategory: "Uncategorized", subCategory: "Uncategorized")
 //
                     if let error = tuple.1 {
                         print(error)
@@ -259,7 +257,7 @@ extension AccountTransactionsVC: UIDocumentPickerDelegate {
                         // creation success
 //                        dismiss(animated: true, completion: {
                             // we'll call the delegate somehow
-                        print(tuple.0!)
+//                        print(tuple.0!)
 //                            self.delegate?.createAccount(account: tuple.0!)
 //                        })
                     }

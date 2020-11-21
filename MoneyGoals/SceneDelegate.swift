@@ -40,7 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance //portrait
         
         let window = UIWindow(windowScene: windowScene)
-        let navController = CustomNavigationController(rootViewController: AccountsVC())
+        let navController = CustomNavigationController(rootViewController: TransactionsVC())
         
         window.rootViewController = navController // Your initial view controller.
         window.rootViewController = navController

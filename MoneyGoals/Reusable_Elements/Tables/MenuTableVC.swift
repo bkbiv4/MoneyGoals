@@ -19,7 +19,7 @@ class MenuTableVC: NSObject, UITableViewDelegate, UITableViewDataSource {
     var allMenuOptions : [String] = ["Overview", "All Accounts", "All Transactions", "Budgets", "Bills", "Credit Cards", "Forex P/L Calcualtor", "Paycheck Tracker", "Settings"]
     
     /// - Note: This varible will be used when the user only has access to the basic FInance Options
-    var baseMenuOptions: [String] = ["Accounts", "All Transactions"]
+    var baseMenuOptions: [String] = ["Home", "Accounts", "Transactions", "Budgets", "Bills"]
     
     var specialOptions: [String] = ["Overview", "Accounts", "All Transactions", "Bills", "Inventory"]
     
@@ -79,18 +79,18 @@ class MenuTableVC: NSObject, UITableViewDelegate, UITableViewDataSource {
 //            vC.present(navController, animated: true, completion: nil)
 //        }
         
-//        if menuOptions[indexPath.row] == "Accounts" {
-//            let vc = AccountsVC()
-//            let navController = CustomNavigationController(rootViewController: vc)
-//            navController.modalPresentationStyle = .fullScreen
-//            vC.present(navController, animated: true, completion: nil)
-//        }
+        if menuOptions[indexPath.row] == "Accounts" {
+            let vc = AccountsVC()
+            let navController = CustomNavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+            vC.present(navController, animated: true, completion: nil)
+        }
         
-        if menuOptions[indexPath.row] == "All Transactions" {
-//            let vc = TransactionsVC()
-//            let navController = CustomNavigationController(rootViewController: vc)
-//            navController.modalPresentationStyle = .fullScreen
-//            vC.present(navController, animated: true, completion: nil)
+        if menuOptions[indexPath.row] == "Transactions" {
+            let vc = TransactionsVC()
+            let navController = CustomNavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+            vC.present(navController, animated: true, completion: nil)
         }
         
         if menuOptions[indexPath.row] == "Bills" {
@@ -100,8 +100,8 @@ class MenuTableVC: NSObject, UITableViewDelegate, UITableViewDataSource {
             vC.present(navController, animated: true, completion: nil)
         }
         
-        if menuOptions[indexPath.row] == "Inventory" {
-            let vc = InventoryVC()
+        if menuOptions[indexPath.row] == "Budgets" {
+            let vc = BudgetVC()
             let navController = CustomNavigationController(rootViewController: vc)
             navController.modalPresentationStyle = .fullScreen
             vC.present(navController, animated: true, completion: nil)
