@@ -13,6 +13,7 @@ class AccountCell: UITableViewCell {
         didSet {
             brokerName.text = account?.broker?.brokerName
             accountName.text = account?.accountName
+            accountNumber.text = account?.accountNumber
 
             let accountB = convertDTS(amount: ((account?.accountBalance)!).roundTo(places: 2))
 
@@ -32,6 +33,7 @@ class AccountCell: UITableViewCell {
     var brokerName: UILabel!
     var accountName: UILabel!
     var accoountBalance: UILabel!
+    var accountNumber: UILabel!
     
     
     
@@ -64,15 +66,21 @@ class AccountCell: UITableViewCell {
 
 
         accountName = createLabel(string: "", font: UIFont.font12, color: .black, alignment: .left)
-
         accountNameView.addSubview(accountName)
         accountName.leadingAnchor.constraint(equalTo: nameMargins.leadingAnchor).isActive = true
-        accountName.trailingAnchor.constraint(equalTo: nameMargins.trailingAnchor).isActive = true
+        accountName.widthAnchor.constraint(equalToConstant: 75).isActive = true
         accountName.bottomAnchor.constraint(equalTo: accountNameView.bottomAnchor).isActive = true
         accountName.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        accountNumber = createLabel(string: "", font: UIFont.font12, color: .black, alignment: .right)
+        accountNameView.addSubview(accountNumber)
+        accountNumber.trailingAnchor.constraint(equalTo: nameMargins.trailingAnchor).isActive = true
+        accountNumber.leftAnchor.constraint(equalTo: accountName.rightAnchor).isActive = true
+        accountNumber.bottomAnchor.constraint(equalTo: accountName.bottomAnchor).isActive = true
+        accountNumber.topAnchor.constraint(equalTo: accountName.topAnchor).isActive = true
+        
 
         accoountBalance = createLabel(string: "BALANCE", font: UIFont.font12, color: .white, alignment: .center)
-
         addSubview(accoountBalance)
         accoountBalance.leftAnchor.constraint(equalTo: accountNameView.rightAnchor).isActive = true
         accoountBalance.rightAnchor.constraint(equalTo: rightAnchor).isActive = true

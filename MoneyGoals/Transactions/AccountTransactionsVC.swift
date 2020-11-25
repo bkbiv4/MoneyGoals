@@ -89,9 +89,6 @@ class AccountTransactionsVC: UIViewController {
                 transactions.filter { secondF.string(from: $0.transactionDate!) == type }
             )
         }
-//        print(allAccountTransactions)
-        
-        print(allAccountTransactions.count)
         
     }
     

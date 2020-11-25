@@ -30,10 +30,6 @@ class AccountsVC: UIViewController {
     var transactions = [Transaction]()
     var allAccounts = [[Account]]()
     var networth = 0.0
-    var dayNetworth = 0.0
-    var todayNetworth = 0.0
-    var addedNetworth = 0.0
-    var dayNetworthArray : [Double] = []
     var yValues : [ChartDataEntry] = []
     var networthDates: [String] = []
 
@@ -44,6 +40,7 @@ class AccountsVC: UIViewController {
         self.title = "Accounts"
         view.backgroundColor = .darkBlue
         setupNavigationMenuStyle()
+        navigationController?.navigationBar.prefersLargeTitles = false
         AccountsVC.menuOpen = false
 //        deleteTransactions()
         fetchTransactions()
@@ -146,11 +143,21 @@ class AccountsVC: UIViewController {
     
     }()
     
+    var markerLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.font22
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    
+    }()
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
     
     func setUI() {
+        AccountsVC.superView.subviews.forEach { $0.removeFromSuperview() }
         accountTable = AccountTable(accountTableView, allAccounts, self)
         
 //        let screensize: CGRect = UIScreen.main.bounds
@@ -190,8 +197,20 @@ class AccountsVC: UIViewController {
         chartView.rightAnchor.constraint(equalTo: mainView.rightAnchor).isActive = true
         chartView.heightAnchor.constraint(equalToConstant: 250).isActive = true
         
-        chartView.addSubview(chartNetworthLabel)
-        chartNetworthLabel.text = convertCurrencyToString(amount: networth)
+//        chartView.addSubview(chartNetworthLabel)
+        networth = 0.0
+        for account in accounts {
+            if account.accountType?.mainType == "Assets" || account.accountType?.mainType == "Investments" {
+                networth += account.accountBalance
+            }
+            else if account.accountType?.mainType == "Credit" || account.accountType?.mainType == "Loans" {
+                networth -= account.accountBalance
+            }
+
+        } // Initializes Current Networth
+//        chartNetworthLabel.text = convertCurrencyToString(amount: networth)
+        
+        chartView.addSubview(markerLabel)
         
         mainView.addSubview(accountTable.tableView)
         accountTable.tableView.leftAnchor.constraint(equalTo: mainView.leftAnchor).isActive = true
@@ -208,10 +227,16 @@ class AccountsVC: UIViewController {
 // MARK: - Code is used to set up Networth chart on the Acoounts Page
 
 extension AccountsVC: ChartViewDelegate {
-    
-    
     /// - Note: Fix the functions to create networth chart data
     func createChartData() {
+        var dailyChangeArray : [Double] = []
+        var dailyChange: Double = 0.0
+        var finalArray : [Double] = []
+        var week = 7.0
+        var month = 30.0
+        var threeMonth = 90.0
+        var sixMonth = 180.0
+                
         for account in accounts {
             if account.accountType?.mainType == "Assets" || account.accountType?.mainType == "Investments" {
                 networth += account.accountBalance
@@ -220,7 +245,9 @@ extension AccountsVC: ChartViewDelegate {
                 networth -= account.accountBalance
             }
 
-        }
+        } // Initializes Current Networth
+        
+        var networthArray : [Double] = [networth]
         
         let secondF = DateFormatter()
         secondF.dateFormat = "MM/dd/yyyy"
@@ -228,50 +255,52 @@ extension AccountsVC: ChartViewDelegate {
         let today = Date()
         
         
-        for x in 0...30 {
-            networthDates.append(secondF.string(from: Calendar.current.date(byAdding: .day, value: -x, to: secondF.date(from: secondF.string(from: today))!)!))
+        for x in stride(from: 0.0, to: month, by: 1) {
+            networthDates.append(secondF.string(from: Calendar.current.date(byAdding: .day, value: Int(-x), to: secondF.date(from: secondF.string(from: today))!)!))
         }
         
         networthDates.reverse()
         print(networthDates)
         
-        for y in networthDates {
-            dayNetworth = 0.0
+        for date in networthDates {
+            dailyChange = 0.0
             for x in transactions {
-                if secondF.string(from: x.transactionDate!) == y {
-                    if x.transactionType == "Income" {
-                        dayNetworth += x.transactionValue
-                    }
-                    else if x.transactionType == "Expense" {
-                        dayNetworth -= x.transactionValue
-                    }
+                if secondF.string(from: x.transactionDate!) == date {
+                    dailyChange += x.transactionValue
                 }
             }
-            
-            dayNetworthArray.append(dayNetworth.roundTo(places: 2))
+            dailyChangeArray.append(dailyChange)
         }
         
-        print(dayNetworthArray, "Day Array")
+        dailyChangeArray.reverse()
         
-        addedNetworth = 0.0
-        todayNetworth = Double(dayNetworthArray.count)
-        print(todayNetworth, "Today Net")
+        print(dailyChangeArray)
         
-        yValues.append(ChartDataEntry(x: 31, y: networth))
-        
-        for x in dayNetworthArray {
-            addedNetworth = x
-            todayNetworth -= 1.0
-            yValues.append(ChartDataEntry(x: todayNetworth, y: networth + addedNetworth))
+        for x in dailyChangeArray {
+            networth -= x
+            networthArray.append(networth)
         }
-        yValues.reverse()
+        
+        finalArray = Array(networthArray.prefix(Int(month + 1)))
+        finalArray.reverse()
+        
+        
+        /// - Note: Final Data Creation
+        
+        var day = 0.0
+        
+        for x in finalArray {
+            yValues.append(ChartDataEntry(x: day, y: x))
+            day += 1.0
+        }
+        
         
         let dataSet = LineChartDataSet(entries: yValues, label: "Networth")
-//        dataSet.drawCircleHoleEnabled = false
         dataSet.drawCirclesEnabled = false
         
         let data = LineChartData(dataSet: dataSet)
         data.setDrawValues(false)
+        
         chartView.data = data
         
     }
@@ -284,12 +313,19 @@ extension AccountsVC: ChartViewDelegate {
         print(convertCurrencyToString(amount: entry.y))
         print(entry)
         
+        
         chartNetworthLabel.text = convertCurrencyToString(amount: entry.y)
-    }
+        
+        let markerPosition = chartView.getMarkerPosition(highlight: highlight)
+
+        markerLabel.text = "\(entry.y)"
+        
+        markerLabel.center = CGPoint(x: markerPosition.y, y: markerLabel.center.y)
+        markerLabel.isHidden = false
     
 //    func setData() {
 //        var data = LineChartData(dataSet: LineChartDataSet(entries: yValues, label: "Networth"))
 //        chartView.data = data
 //    }
-    
+    }
 }

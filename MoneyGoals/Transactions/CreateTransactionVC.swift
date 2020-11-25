@@ -73,7 +73,6 @@ class CreateTransactionVC: UIViewController {
         setupNavigationStyle()
         view.backgroundColor = .brown
         setupPlusIcon(#selector(savetransaction))
-        
         transactionDateText.inputView = datePicker
         setUI()
         

@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Charts
 
 class AccountSingularVC: UIViewController {
+    
+    var transactions = [Transaction]()
     
     var account : Account? {
         didSet {
@@ -52,8 +55,8 @@ class AccountSingularVC: UIViewController {
         return label
     }()
     
-    var transactionGraph : UIView = {
-        let view = UIView()
+    var transactionGraph : LineChartView = {
+        let view = LineChartView()
         view.backgroundColor = .lightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -75,11 +78,17 @@ class AccountSingularVC: UIViewController {
         view.backgroundColor = .abbey
         view.layer.cornerRadius = 25
         setUI()
+        
     }
+    
+//    func grabTransactions() {
+//        for 0...4 in transactions {
+//            
+//        }
+//    }
     
     override func viewDidLayoutSubviews() {
         let height = view.bounds.size.height
-        print(height)
         let width = view.bounds.size.width
         self.view.frame = CGRect(x: 0, y: height - 500, width: width, height: 500)
     }
@@ -143,6 +152,7 @@ class AccountSingularVC: UIViewController {
     }
     
     func setUI() {
+        setChart()
         let margin = view.layoutMarginsGuide
         
         view.addSubview(accountType)
@@ -205,4 +215,106 @@ class AccountSingularVC: UIViewController {
         infoStackView.heightAnchor.constraint(equalToConstant: 75).isActive = true
         
     }
+}
+
+extension AccountSingularVC: ChartViewDelegate {
+    
+    
+    
+    func setChart() {
+        chartViewDidLoad()
+        createChartData()
+    }
+    func chartViewDidLoad() {
+        transactionGraph.delegate = self
+        transactionGraph.xAxis.enabled = false
+        transactionGraph.leftAxis.enabled = false
+        transactionGraph.rightAxis.enabled = false
+        transactionGraph.legend.enabled = false
+        transactionGraph.animate(xAxisDuration: 1)
+    }
+    
+    func createChartData() {
+        var graphDates: [String] = []
+        var dailyChange: Double = 0.0
+        var dailyChangeArray: [Double] = []
+        var finalArray : [Double] = []
+        var yValues : [ChartDataEntry] = []
+        var week = 7.0
+        var month = 30.0
+        var threeMonth = 90.0
+        var sixMonth = 180.0
+        
+        guard let transactions = self.account?.transactions?.allObjects as? [Transaction] else {return}
+        guard var currentBalance = self.account?.accountBalance else {return}
+        
+        
+        var accountBalanceArray : [Double] = [currentBalance]
+        
+        let secondF = DateFormatter()
+        secondF.dateFormat = "MM/dd/yyyy"
+        
+        let today = Date()
+        
+        for x in stride(from: 0.0, to: month, by: 1) {
+            graphDates.append(secondF.string(from: Calendar.current.date(byAdding: .day, value: Int(-x), to: secondF.date(from: secondF.string(from: today))!)!))
+        }
+        graphDates.reverse()
+        
+        for date in graphDates {
+            dailyChange = 0.0
+            for x in transactions {
+                if secondF.string(from: x.transactionDate!) == date {
+                    dailyChange += x.transactionValue
+                }
+            }
+            dailyChangeArray.append(dailyChange)
+        }
+        
+        dailyChangeArray.reverse()
+        
+        for x in dailyChangeArray {
+            currentBalance -= x
+            accountBalanceArray.append(currentBalance)
+        }
+        
+        finalArray = Array(accountBalanceArray.prefix(Int(month + 1)))
+        finalArray.reverse()
+        
+        
+        /// - Note: Final Data Creation
+        
+        var day = 0.0
+        
+        for x in finalArray {
+            yValues.append(ChartDataEntry(x: day, y: x))
+            day += 1.0
+        }
+        
+        
+        let dataSet = LineChartDataSet(entries: yValues, label: "Networth")
+        dataSet.drawCirclesEnabled = false
+        
+        let data = LineChartData(dataSet: dataSet)
+        data.setDrawValues(false)
+        
+        transactionGraph.data = data
+        
+    }
+    
+    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+        print(entry)
+        
+//        let graphPoint = chartView.getMarkerPosition(entry: entry,  highlight: highlight)
+
+        // Adding top marker
+//        markerView.valueLabel.text = "\(entry.value)"
+//        markerView.dateLabel.text = "\(months[entry.xIndex])"
+//        markerView.center = CGPointMake(graphPoint.x, markerView.center.y)
+//        markerView.hidden = false
+    }
+    
+//    func chartView(_ chartView: ChartViewBase, animatorDidStop animator: Animator) {
+//        <#code#>
+//    }
 }
